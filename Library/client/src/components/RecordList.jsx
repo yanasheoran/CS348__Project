@@ -52,9 +52,9 @@ export default function RecordList() {
   // This method fetches the records from the database.
   useEffect(() => {
     async function getRecords() {
-      const response = await fetch(`http://127.0.0.1:5000/get_loans`);
-      const memberList = await fetch(`http://127.0.0.1:5000/get_members`);
-      const bookList = await fetch(`http://127.0.0.1:5000/get_books`);
+      const response = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_loans`);
+      const memberList = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_members`);
+      const bookList = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_books`);
       if (!response.ok) {
         const message = `An error occurred: ${response.statusText}`;
         console.error(message);
@@ -81,7 +81,7 @@ export default function RecordList() {
 
   // This method will delete a record
   async function deleteRecord(id) {
-    await fetch(`http://127.0.0.1:5000/delete_record/${id}`, {
+    await fetch(`hhttps://noble-hydra-421901.uc.r.appspot.com/delete_record/${id}`, {
       method: "DELETE",
     });
     const newRecords = records.filter((el) => el._id !== id);

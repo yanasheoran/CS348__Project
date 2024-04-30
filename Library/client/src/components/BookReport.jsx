@@ -8,7 +8,7 @@ export default function BookReport() {
 
     useEffect(() => {
         async function fetchBooks() {
-            const response = await fetch(`http://127.0.0.1:5000/get_books`);
+            const response = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_books`);
             const bookList = await response.json();
             setBooks(bookList);
         }
@@ -18,7 +18,7 @@ export default function BookReport() {
     useEffect(() => {
         const fetchBookReport = async () => {
             if (!bookId) return;  // Prevents fetching if no book ID is selected
-            const url = `http://127.0.0.1:5000/book-report/${bookId}`;
+            const url = `https://noble-hydra-421901.uc.r.appspot.com/book-report/${bookId}`;
             try {
                 const response = await fetch(url);
                 const data = await response.json();

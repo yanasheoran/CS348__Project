@@ -18,10 +18,10 @@ export default function Record() {
 
   useEffect(() => {
     async function populate_arrays() {
-      const response = await fetch(`http://127.0.0.1:5000/get_members`);
+      const response = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_members`);
       const memberList = await response.json();
       setMembers(memberList);
-      const response2 = await fetch(`http://127.0.0.1:5000/get_books`);
+      const response2 = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/get_books`);
       const bookList = await response2.json();
       setBooks(bookList);
     }
@@ -35,7 +35,7 @@ export default function Record() {
       if (!id) return;
       setIsNew(false);
       const response = await fetch(
-        `http://127.0.0.1:5000/fetch_record/${params.id.toString()}`
+        `https://noble-hydra-421901.uc.r.appspot.com/fetch_record/${params.id.toString()}`
       );
       if (!response.ok) {
         const message = `An error has occurred: ${response.statusText}`;
@@ -76,7 +76,7 @@ export default function Record() {
       let response;
       if (isNew) {
         // if we are adding a new record we will POST to /record.
-        response = await fetch("http://127.0.0.1:5000/post_record", {
+        response = await fetch("https://noble-hydra-421901.uc.r.appspot.com/post_record", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function Record() {
         });
       } else {
         // if we are updating a record we will PATCH to /record/:id.
-        response = await fetch(`http://127.0.0.1:5000/update_record/${params.id}`, {
+        response = await fetch(`https://noble-hydra-421901.uc.r.appspot.com/update_record/${params.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
