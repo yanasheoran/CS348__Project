@@ -15,9 +15,9 @@ export default function Record() {
   const navigate = useNavigate();
   const [members, setMembers] = useState([]);
   const [books, setBooks] = useState([]);
-  
+
   useEffect(() => {
-    async function populate_arrays() {  
+    async function populate_arrays() {
       const response = await fetch(`http://127.0.0.1:5000/get_members`);
       const memberList = await response.json();
       setMembers(memberList);
@@ -26,13 +26,13 @@ export default function Record() {
       setBooks(bookList);
     }
     populate_arrays();
-    }, []);
+  }, []);
 
 
   useEffect(() => {
     async function fetchData() {
       const id = params.id?.toString() || undefined;
-      if(!id) return;
+      if (!id) return;
       setIsNew(false);
       const response = await fetch(
         `http://127.0.0.1:5000/fetch_record/${params.id.toString()}`
@@ -60,7 +60,7 @@ export default function Record() {
     return setForm((prev) => {
       return { ...prev, ...value };
     });
-    
+
   }
 
   // This function will handle the submission.
@@ -70,6 +70,7 @@ export default function Record() {
     record.LoanID = parseInt(record.LoanID);
     record.MemberID = parseInt(record.MemberID);
     record.BookID = parseInt(record.BookID);
+    console.log("re", record);
 
     try {
       let response;
@@ -99,7 +100,14 @@ export default function Record() {
     } catch (error) {
       console.error('A problem occurred with your fetch operation: ', error);
     } finally {
-      setForm({ name: "", position: "", level: "" });
+      setForm({
+        BookID: "",
+        MemberID: "",
+        LoanDate: "",
+        DueDate: "",
+        ReturnDate: "",
+        Status: "",
+      });
       navigate("/");
     }
   }
@@ -128,7 +136,7 @@ export default function Record() {
             value={form.MemberID}
             onChange={(e) => updateForm({ MemberID: e.target.value })}
             required
-            >
+          >
             <option value="">Select Member</option>
             {members.map((member) => (
               <option key={member.MemberID} value={member.MemberID}>
@@ -139,10 +147,10 @@ export default function Record() {
 
           {/* list out all books in dropdown */}
           <select
-           name="BookID"
-           value={form.BookID}
-           onChange={(e) => updateForm({ BookID: e.target.value })}
-           required
+            name="BookID"
+            value={form.BookID}
+            onChange={(e) => updateForm({ BookID: e.target.value })}
+            required
           >
             <option value="">Select Book</option>
             {books.map((book) => (
@@ -169,15 +177,20 @@ export default function Record() {
                     name="LoanDate"
                     id="LoanDate"
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="Developer Advocate"
                     value={form.LoanDate}
-                    onChange={(e) => updateForm({ LoanDate: e.target.value })}
+                    onChange={(e) => {
+                      const newLoanDate = new Date(e.target.value);
+                      const dueDate = new Date(newLoanDate.setFullYear(newLoanDate.getFullYear() + 1));
+                      const formattedDueDate = (newLoanDate.getMonth() + 1).toString().padStart(2, '0') + 
+                                     '/' + (newLoanDate.getDate()+1).toString().padStart(2, '0') + 
+                                     '/' + newLoanDate.getFullYear();
+                      updateForm({ LoanDate: e.target.value, DueDate: dueDate.toISOString().split('T')[0], formattedDueDate: formattedDueDate });
+                    }}
                     required
                   />
                 </div>
               </div>
             </div>
-
 
             <div className="sm:col-span-4">
               <label
@@ -189,20 +202,22 @@ export default function Record() {
               <div className="mt-2">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
                   <input
-                    type="date"
+                    type="text"
+                    readOnly
                     name="DueDate"
                     id="DueDate"
                     className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
-                    placeholder="Developer Advocate"
-                    value={form.DueDate}
-                    onChange={(e) => updateForm({DueDate: e.target.value })}
-                    required
+                    value={
+                      form.formattedDueDate ? form.formattedDueDate : ''}
+                      // form.DueDate ? new Date(form.DueDate).toISOString().split('T')[0] : ''}
+                    placeholder="Due Date will be displayed here"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="sm:col-span-4">
+
+            {form.Status === "Returned" && (<div className="sm:col-span-4">
               <label
                 htmlFor="ReturnDate"
                 className="block text-sm font-medium leading-6 text-slate-900"
@@ -223,6 +238,7 @@ export default function Record() {
                 </div>
               </div>
             </div>
+            )}
 
             <div>
               <fieldset className="mt-4">

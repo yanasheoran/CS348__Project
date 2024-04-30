@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import BookReport from "./BookReport";
 
 const Record = (props) => (
   <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
-      {props.record.BookID}
+      {props.record.BookTitle}
     </td>
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       {props.record.MemberID}
@@ -66,7 +67,8 @@ export default function RecordList() {
         const member = members.find((member) => member.MemberID === record.MemberID);
         const book = books.find((book) => book.BookID === record.BookID);
         record.MemberID = member.Name;
-        record.BookID = book.Title;
+        record.BookID = book.BookID;
+        record.BookTitle = book.Title;
       });
 
       setRecords(records);
@@ -84,6 +86,7 @@ export default function RecordList() {
     });
     const newRecords = records.filter((el) => el._id !== id);
     setRecords(newRecords);
+    window.location.reload();
   }
 
   // This method will map out the records on the table
@@ -138,37 +141,7 @@ export default function RecordList() {
       </div>
 
       <h3 className="text-lg font-semibold p-4">Book Report</h3>
-      <div className="border rounded-lg overflow-hidden">
-        <div className="relative w-full overflow-auto">
-          <table className="w-full caption-bottom text-sm">
-            <thead className="[&amp;_tr]:border-b">
-              <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Book Name
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Member Name
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Loan Date
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Due Date
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Return Date
-                </th>
-                <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody className="[&amp;_tr:last-child]:border-0">
-              {recordList()}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      <BookReport />
     </>
   );
 }
