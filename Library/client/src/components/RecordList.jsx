@@ -81,7 +81,7 @@ export default function RecordList() {
 
   // This method will delete a record
   async function deleteRecord(id) {
-    await fetch(`hhttps://noble-hydra-421901.uc.r.appspot.com/delete_record/${id}`, {
+    await fetch(`https://noble-hydra-421901.uc.r.appspot.com/delete_record/${id}`, {
       method: "DELETE",
     });
     const newRecords = records.filter((el) => el._id !== id);
